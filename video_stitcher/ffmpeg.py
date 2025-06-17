@@ -163,10 +163,11 @@ def process_video(input_path, title_text, output_dir, output_ext=".mp4", verbose
             "-filter_complex",
             # scale/pad to full HD
             f"fps={framerate},"
-            + f"scale=min(iw*{height}/ih\,{width}):min({height}\,ih*{width}/iw),pad={width}:{height}:({width}-iw)/2:({height}-ih)/2:color=white,setsar=sar=1/1,"
+            + f"scale=min(iw*{height}/ih\,{width}):min({height}\,ih*{width}/iw),pad={width}:{height}:({width}-iw)/2:({height}-ih)/2:color=black,setsar=sar=1/1",
             # draw the name box at the bottom
-            + f"drawbox=y=ih-{2*font_size}:color=black@0.3:width=iw:height={2*font_size}:t=fill,"
-            + f"drawtext=text={escaped_title_text}:x={font_size}:y=H-{font_size}-th/2:font=Roboto:fontsize={font_size}:fontcolor=white",
+            # + ","
+            # + f"drawbox=y=ih-{2*font_size}:color=black@0.3:width=iw:height={2*font_size}:t=fill,"
+            # + f"drawtext=text={escaped_title_text}:x={font_size}:y=H-{font_size}-th/2:font=Roboto:fontsize={font_size}:fontcolor=white",
             "-y",
             output_path,
         ],
@@ -187,7 +188,7 @@ def collate_videos(path_title_list, file_title, tmp_dir, output_dir, output_ext=
     processed = []
     max_input_mtime = 0 # maximum modified time for inputs.
 
-    for path, title in path_title_list:   
+    for path, title, authors in path_title_list:   # added authors here as well, TODO: do something with it.
         try:
             p = process_video(path, title, tmp_dir, verbose=verbose)
         except Exception as e:

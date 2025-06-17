@@ -40,7 +40,7 @@ def video_path(video_id, verbose=False):
     assuming the video is in the videos/inputs dir and called {id}.mp4/mkv/mov etc.
     """
     for ext in video_fileexts:
-        p = inputs_path / f"{video_id}{ext}"
+        p = inputs_path / f"nime2025_{video_id}{ext}"
         if p.exists():
             return p
         else:
@@ -51,21 +51,24 @@ def video_path(video_id, verbose=False):
 
 id_col = "id"
 title_col = "title"
-authors_col = "authors-names"
+authors_col = "authors"
 session_col = "session_code"
 
 
 def build_video_lists():
-  data = load_data()
-  sessions = {row[session_col] for row in data} # set of sessions
-  click.secho(f"Sessions {sessions}", fg="blue")
-  video_dict = {}
-  for s in sessions:
-    click.secho(f"Finding video for {s}.", fg="yellow")
-    video_list = [(video_path(entry[id_col]), entry[title_col], entry[authors_col]) for entry in data if entry[session_col] == s]
-    video_list = [(path, title, authors) for (path, title, authors) in video_list if path is not None]
-    video_dict[s] = video_list   
-    click.secho(f"{s}: {video_list}", fg="yellow")     
+    data = load_data()
+    sessions = {row[session_col] for row in data} # set of sessions
+    click.secho(f"Sessions {sessions}", fg="blue")
+    video_dict = {}
+    for s in sessions:
+        click.secho(f"Finding video for {s}.", fg="yellow")
+        # video_list = [(entry[id_col], entry[title_col], entry[authors_col]) for entry in data if entry[session_col] == s]
+        # click.secho(f"{s}: {video_list}", fg="yellow")     
+
+        video_list = [(video_path(entry[id_col]), entry[title_col], entry[authors_col]) for entry in data if entry[session_col] == s]
+        video_list = [(path, title, authors) for (path, title, authors) in video_list if path is not None]
+        video_dict[s] = video_list   
+        click.secho(f"{s}: {video_list}", fg="yellow")     
     return video_dict
 
 
